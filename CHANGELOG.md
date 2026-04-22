@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-04-22
+
+### Fixed
+- First-run bootstrap: `SessionStart` now runs `npm install` in the plugin root when the native `better-sqlite3` binding is missing, so `/plugin install` works out of the box. A sentinel file prevents retry loops on failure, and clear guidance is surfaced if manual intervention is needed.
+
 ## [0.1.0] — 2026-04-22
 
 ### Added
