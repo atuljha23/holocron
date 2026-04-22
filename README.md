@@ -22,7 +22,7 @@ If you use Claude Code daily you already know the failure mode: you correct the 
 
 ```bash
 # Add this repo as a marketplace and install the plugin
-/plugin marketplace add atulkumar-jha/holocron
+/plugin marketplace add atuljha23/holocron
 /plugin install holocron@holocron
 
 # One-time: install the native dependency the learning crystal needs
@@ -32,7 +32,7 @@ cd ~/.claude/plugins/marketplaces/holocron && npm install
 Local dev against a clone:
 
 ```bash
-git clone https://github.com/atulkumar-jha/holocron ~/projects/holocron
+git clone https://github.com/atuljha23/holocron ~/projects/holocron
 cd ~/projects/holocron && npm install
 /plugin marketplace add ~/projects/holocron
 /plugin install holocron@holocron

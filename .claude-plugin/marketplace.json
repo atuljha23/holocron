@@ -3,7 +3,7 @@
   "name": "holocron",
   "owner": {
     "name": "Atul Kumar Jha",
-    "url": "https://github.com/atulkumar-jha"
+    "url": "https://github.com/atuljha23"
   },
   "metadata": {
     "description": "Holocron — role-specialist agents, domain commands, and a learning crystal for Claude Code."
@@ -16,8 +16,8 @@
       "author": {
         "name": "Atul Kumar Jha"
       },
-      "homepage": "https://github.com/atulkumar-jha/holocron",
-      "repository": "https://github.com/atulkumar-jha/holocron",
+      "homepage": "https://github.com/atuljha23/holocron",
+      "repository": "https://github.com/atuljha23/holocron",
       "license": "MIT",
       "keywords": [
         "claude-code",

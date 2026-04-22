@@ -5,10 +5,10 @@
   "description": "A Jedi council for your codebase: 10 role-specialist agents, 15 domain commands (a11y, perf, QA, security, ADR), 8 skills, and a SQLite-backed learning crystal that compounds your corrections across sessions.",
   "author": {
     "name": "Atul Kumar Jha",
-    "url": "https://github.com/atulkumar-jha"
+    "url": "https://github.com/atuljha23"
   },
-  "homepage": "https://github.com/atulkumar-jha/holocron",
-  "repository": "https://github.com/atulkumar-jha/holocron",
+  "homepage": "https://github.com/atuljha23/holocron",
+  "repository": "https://github.com/atuljha23/holocron",
   "license": "MIT",
   "keywords": [
     "claude-code",
