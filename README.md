@@ -4,7 +4,7 @@ A Claude Code plugin that gives you a Jedi council of role-specialist agents, do
 
 > A holocron, in Star Wars lore, is a crystalline cube that stores Jedi teachings. This one stores yours — every correction you make becomes durable knowledge the assistant carries into the next session.
 
-**v0.1.0** · MIT · targets SWEs, frontend engineers, backend engineers, and QAs.
+**[atuljha23.github.io/holocron](https://atuljha23.github.io/holocron/)** · **v0.1.1** · MIT · targets SWEs, frontend engineers, backend engineers, and QAs.
 
 ---
 
