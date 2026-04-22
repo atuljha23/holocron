@@ -49,19 +49,21 @@ Health check:
 
 ---
 
-## What's inside (v0.1.0)
+## What's inside (v0.3.0)
 
 | Component | Count | Where |
 |---|---:|---|
-| Role / meta agents | 10 | `agents/` |
-| Slash commands | 15 | `commands/` |
-| Skills | 8 | `skills/` |
-| Hook scripts | 10 | `scripts/` |
+| Role / meta agents | 14 | `agents/` |
+| Slash commands | 24 | `commands/` |
+| Skills | 11 | `skills/` |
+| Hook scripts | 13 | `scripts/` |
 | Hook events wired | 6 | `hooks/hooks.json` |
 | Context profiles | 4 | `contexts/` |
 | Rules | 4 | `rules/` |
 
 Run `node scripts/holocron-cli.js inventory` anytime to verify counts match this table.
+
+> **v0.3.0 — Token Economy.** Every Claude Code session's $ and tokens are logged to `~/.holocron/sessions/`. Run `/holocron:cost` for the rolling total, `/holocron:budget` to set caps, `/holocron:mcp-audit` to cut schema bloat, `@cost-analyst` for ranked savings proposals.
 
 ---
 
@@ -103,6 +105,31 @@ Run `node scripts/holocron-cli.js inventory` anytime to verify counts match this
 /holocron:flaky <test>       # walk the flake-triage tree with evidence
 ```
 
+### If you're SRE / platform
+
+```
+@sre-engineer <task>         # Docker / k8s / CI / runbooks
+/holocron:llm-gate "push to main"
+/holocron:permission-tune    # reduce prompt fatigue with allow/deny tuning
+```
+
+### If you're security
+
+```
+@threat-modeler <feature>    # STRIDE on a proposed change
+/holocron:threat-model       # design-level review
+/holocron:sec-scan           # SAST + secrets + CVE on the diff
+```
+
+### If you care about cost
+
+```
+/holocron:cost --breakdown          # $ + tokens + cache hit rate
+/holocron:budget --session 2 --daily 10
+/holocron:mcp-audit                 # MCP token overhead
+@cost-analyst                       # ranked savings from usage data
+```
+
 ---
 
 ## Agents
@@ -118,6 +145,10 @@ All live under `agents/` and invoke as `@<name>`:
 | `@a11y-auditor` | WCAG 2.2 AA audits on UI components |
 | `@perf-engineer` | Core Web Vitals, bundle size, N+1, index gaps |
 | `@security-reviewer` | OWASP review, authn/authz, injection surfaces |
+| `@threat-modeler` | STRIDE / LINDDUN design-level threat modeling |
+| `@sre-engineer` | Dockerfile / k8s / CI / SLOs / runbook drafting |
+| `@data-engineer` | SQL review, dbt models, pipelines, schema drift |
+| `@cost-analyst` | Ranked $-saving proposals from session usage data |
 | `@debugger` | Hypothesis-driven root-cause analysis |
 | `@code-reviewer` | Staff-level PR review |
 | `@docs-writer` | READMEs, runbooks, ADRs, API docs |
@@ -130,9 +161,13 @@ Each agent's system prompt includes a "when NOT to use me — delegate to X" sec
 
 Namespaced as `/holocron:<name>`:
 
-**Meta / workflow**: `onboard`, `plan`, `develop`, `commit`, `review`, `handoff`, `learn`, `recall`, `doctor`
+**Meta / workflow**: `onboard`, `plan`, `develop`, `commit`, `review`, `handoff`, `learn`, `recall`, `insights`, `worktree`, `doctor`
 
-**Domain**: `a11y`, `perf`, `test-gap`, `flaky`, `sec-scan`, `adr`
+**Domain**: `a11y`, `perf`, `test-gap`, `flaky`, `sec-scan`, `threat-model`, `adr`
+
+**Ops / gates**: `permission-tune`, `llm-gate`
+
+**Token economy**: `cost`, `budget`, `mcp-audit`, `context-size`
 
 Each command file documents its argument hints and delegates to the right agent(s).
 
@@ -150,24 +185,29 @@ Cross-cutting knowledge, auto-loaded when relevant:
 - `perf-checklist` — Core Web Vitals + backend query rubric
 - `debug-playbook` — hypothesis-driven triage
 - `pr-review-rubric` — what a staff engineer actually looks at
+- `observability-checklist` — logs / traces / metrics / correlation
+- `migration-patterns` — expand / contract, backfill, online DDL
+- `token-economy` — model tiering, cache hygiene, Read discipline, MCP pruning
 
 ---
 
 ## Hooks
 
-Six events, ten scripts. Everything fails safe — hooks never crash the session.
+Six events, thirteen scripts. Everything fails safe — hooks never crash the session.
 
 | Event | What it does |
 |---|---|
 | `SessionStart` | Injects top-K recent learnings from the crystal as additionalContext |
 | `UserPromptSubmit` | FTS-matches the prompt against learnings, injects top 3 |
 | `PreToolUse` Edit\|Write | Read-before-write tracker + regex secret scanner (blocks on confident matches) |
+| `PreToolUse` Read | Nudges `offset` + `limit` on files > 500 lines |
 | `PreToolUse` Bash(git commit*) | Surfaces repo-detected quality gates |
 | `PreToolUse` Bash(git push*) | Nudges `/holocron:handoff` if none recorded |
 | `PostToolUse` Edit | Sniffs `console.log`/`debugger`/`print`/`TODO` debug residue |
 | `PostToolUse` Bash(*test*) | On test failure, nudges `/holocron:learn` |
+| `PostToolUse *` | Flags tool responses > ~8k tokens (context bloat) |
 | `PreCompact` | Snapshots session state, advises on post-compact recall |
-| `Stop` | Detects correction markers, prompts durable capture |
+| `Stop` | Parses the transcript and writes a per-session $ / token record; checks budget; nudges correction capture |
 
 ---
 
