@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "holocron",
+  "version": "0.1.0",
+  "description": "A Jedi council for your codebase: 10 role-specialist agents, 15 domain commands (a11y, perf, QA, security, ADR), 8 skills, and a SQLite-backed learning crystal that compounds your corrections across sessions.",
+  "author": {
+    "name": "Atul Kumar Jha",
+    "url": "https://github.com/atulkumar-jha"
+  },
+  "homepage": "https://github.com/atulkumar-jha/holocron",
+  "repository": "https://github.com/atulkumar-jha/holocron",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "agents",
+    "skills",
+    "hooks",
+    "sqlite",
+    "fts5",
+    "accessibility",
+    "performance",
+    "qa",
+    "security",
+    "frontend",
+    "backend",
+    "workflow"
+  ]
+}

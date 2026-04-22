@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/session-start.js\""
+          }
+        ],
+        "description": "Load top-K recent learnings from the holocron into session context."
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/prompt-submit-inject.js\""
+          }
+        ],
+        "description": "FTS-match the user's prompt against stored learnings and inject top matches."
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/read-before-write.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/secret-scan.js\""
+          }
+        ],
+        "description": "Enforce read-before-write; scan incoming content for secrets."
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git commit*)",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/pre-commit-gate.js\""
+          },
+          {
+            "type": "command",
+            "if": "Bash(git push*)",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/pre-push-wrapup.js\""
+          }
+        ],
+        "description": "Git guardrails: pre-commit quality gate, pre-push wrap-up nudge."
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/post-edit-check.js\""
+          }
+        ],
+        "description": "Sniff for TODO/console.log/debugger/print left behind in source edits."
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/test-failure-learn.js\""
+          }
+        ],
+        "description": "On test-command failure, suggest /holocron:learn to capture the lesson."
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/pre-compact.js\""
+          }
+        ],
+        "description": "Persist open threads and in-flight rule drafts before compaction."
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/stop-capture-prompt.js\""
+          }
+        ],
+        "description": "On end-of-turn, if an unresolved correction is detected, prompt capture."
+      }
+    ]
+  }
+}

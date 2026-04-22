@@ -1,0 +1,38 @@
+{
+  "_description": "Example Claude Code settings tuned for holocron — permissions, output style, auto-compaction.",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(rg:*)",
+      "Bash(fd:*)",
+      "Bash(cat:*)",
+      "Bash(node:*)",
+      "Bash(npm:test)",
+      "Bash(npm:run lint)",
+      "Bash(npm:run typecheck)",
+      "Bash(pytest:*)",
+      "Bash(go:test)",
+      "Bash(go:vet)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(npm:publish)",
+      "Bash(gh release:*)"
+    ]
+  },
+  "outputStyle": "compact",
+  "autoCompact": {
+    "threshold": 0.85,
+    "preserveBudgetTokens": 50000
+  }
+}

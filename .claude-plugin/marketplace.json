@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "holocron",
+  "owner": {
+    "name": "Atul Kumar Jha",
+    "url": "https://github.com/atulkumar-jha"
+  },
+  "metadata": {
+    "description": "Holocron — role-specialist agents, domain commands, and a learning crystal for Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "holocron",
+      "source": "./",
+      "description": "A Jedi council for your codebase: role-specialist agents, domain commands, and a SQLite-backed learning crystal that compounds corrections across sessions.",
+      "author": {
+        "name": "Atul Kumar Jha"
+      },
+      "homepage": "https://github.com/atulkumar-jha/holocron",
+      "repository": "https://github.com/atulkumar-jha/holocron",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "agents",
+        "skills",
+        "hooks",
+        "sqlite",
+        "a11y",
+        "performance",
+        "qa",
+        "security",
+        "frontend",
+        "backend"
+      ],
+      "category": "workflow",
+      "tags": [
+        "role-specialists",
+        "learning-crystal",
+        "accessibility",
+        "performance",
+        "testing",
+        "security",
+        "adr"
+      ]
+    }
+  ]
+}

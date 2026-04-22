@@ -1,0 +1,26 @@
+{
+  "_description": "Example MCP server configuration. Copy into your Claude Code settings (not into the plugin) — plugin MCP config is separate. These are server hints; install them via `claude mcp add` or your settings.",
+  "mcpServers": {
+    "context7": {
+      "_purpose": "Live documentation lookup for third-party libs (replaces guessing)",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "playwright": {
+      "_purpose": "Browser automation for frontend verification and a11y testing",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"]
+    },
+    "github": {
+      "_purpose": "PRs, issues, code search against GitHub without leaving the session",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "<PAT with read access>" }
+    },
+    "postgres": {
+      "_purpose": "Schema introspection and query review against a local Postgres (not prod!)",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://localhost/<db>"]
+    }
+  }
+}
