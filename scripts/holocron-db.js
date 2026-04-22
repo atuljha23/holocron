@@ -16,7 +16,33 @@ function tryRequire(mod) {
   catch (err) { return { __missing: err }; }
 }
 
-const Database = tryRequire('better-sqlite3');
+function isBindingsError(err) {
+  const msg = (err && err.message) || '';
+  return /bindings file|Could not locate the bindings|Cannot find module/i.test(msg);
+}
+
+function loadSqlite() {
+  const D = tryRequire('better-sqlite3');
+  return D.__missing ? null : D;
+}
+
+function runBootstrap() {
+  // Lazy-load to avoid a hard require cycle; _bootstrap is resilient.
+  try {
+    const { ensureDeps } = require('./_bootstrap');
+    return ensureDeps();
+  } catch (err) {
+    return { ok: false, reason: err.message };
+  }
+}
+
+function bustSqliteCache() {
+  for (const mod of ['better-sqlite3', 'bindings']) {
+    try { delete require.cache[require.resolve(mod)]; } catch (_) { /* noop */ }
+  }
+}
+
+let _cachedDatabase = loadSqlite();
 
 function userDbPath() {
   const base = process.env.HOLOCRON_HOME || path.join(os.homedir(), '.holocron');
@@ -36,8 +62,9 @@ function ensureProjectDir() {
   return path.join(base, 'learnings.db');
 }
 
-function openDb(dbPath) {
-  if (Database.__missing) {
+function _instantiate(dbPath) {
+  const Database = _cachedDatabase || loadSqlite();
+  if (!Database) {
     const err = new Error(
       "Holocron requires 'better-sqlite3'. Run:  cd " +
       path.dirname(__dirname) + " && npm install"
@@ -45,7 +72,31 @@ function openDb(dbPath) {
     err.code = 'HOLOCRON_MISSING_DEP';
     throw err;
   }
-  const db = Database(dbPath);
+  _cachedDatabase = Database;
+  return Database(dbPath);
+}
+
+function openDb(dbPath) {
+  let db;
+  try {
+    db = _instantiate(dbPath);
+  } catch (err) {
+    if (!isBindingsError(err)) throw err;
+    // Self-heal: run npm install in the plugin root, then retry once.
+    const boot = runBootstrap();
+    if (!boot || !boot.ok) {
+      const hint = (boot && boot.hint) || `cd ${path.dirname(__dirname)} && npm install`;
+      const e = new Error(
+        `Holocron SQLite binding missing and auto-bootstrap failed. Fix: ${hint}`
+      );
+      e.code = 'HOLOCRON_BOOTSTRAP_FAILED';
+      e.cause = err;
+      throw e;
+    }
+    bustSqliteCache();
+    _cachedDatabase = null;
+    db = _instantiate(dbPath);
+  }
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
   migrate(db);
@@ -204,5 +255,5 @@ module.exports = {
   countLearnings,
   exportLearnings,
   sanitizeFts,
-  isReady: () => !Database.__missing,
+  isReady: () => _cachedDatabase != null || loadSqlite() != null,
 };

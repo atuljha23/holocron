@@ -52,8 +52,22 @@ function parseArgs(argv) {
 }
 
 function lazyDb() {
-  try { return require('./holocron-db'); }
-  catch (err) {
+  try {
+    let db = require('./holocron-db');
+    if (!db.isReady()) {
+      // Auto-bootstrap once: run npm install, bust caches, retry.
+      process.stderr.write('holocron: installing dependencies (one time)...\n');
+      const { ensureDeps } = require('./_bootstrap');
+      const boot = ensureDeps();
+      if (!boot.ok) {
+        console.error(`holocron: bootstrap failed — ${boot.reason}. Fix: ${boot.hint}`);
+        process.exit(2);
+      }
+      try { delete require.cache[require.resolve('./holocron-db')]; } catch (_) {}
+      db = require('./holocron-db');
+    }
+    return db;
+  } catch (err) {
     console.error('holocron: failed to load DB module:', err.message);
     process.exit(2);
   }

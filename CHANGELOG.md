@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.2.1] — 2026-04-22
+
+### Fixed
+- Every CLI/hook entry point now self-heals on first run, not just `SessionStart`. v0.1.1 added auto-`npm install` at session start; if the user invoked a command (e.g. `/holocron:insights`) via plugin reload before a fresh session, bootstrap never fired. `holocron-db.js#openDb` now catches the bindings error and runs bootstrap before retrying, and `holocron-cli.js#lazyDb` triggers bootstrap when `better-sqlite3` isn't installed at all. Verified end-to-end on a fresh clone with zero `node_modules`.
+
 ## [0.2.0] — 2026-04-22
 
 ### Added — Jedi Council expands
