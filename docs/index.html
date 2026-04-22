@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Holocron — A Jedi Council for Claude Code</title>
-  <meta name="description" content="Holocron is a Claude Code plugin with 13 role-specialist agents, 20 domain commands, 10 skills, and a SQLite-backed learning crystal that compounds your corrections across sessions.">
+  <meta name="description" content="Holocron is a Claude Code plugin with 14 role-specialist agents, 24 domain commands, 11 skills (incl. token economy), a SQLite-backed learning crystal, and cost-aware hooks that track $ and cache hit rate across every session.">
   <meta property="og:title" content="Holocron — A Jedi Council for Claude Code">
-  <meta property="og:description" content="13 specialist agents, 20 domain commands, 10 skills, and a learning crystal that compounds your corrections.">
+  <meta property="og:description" content="14 specialist agents, 24 domain commands, 11 skills. Learning crystal + token economy: see your $ and cache hit rate across every session.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://atuljha23.github.io/holocron/">
   <meta name="theme-color" content="#070a12">
@@ -24,7 +24,7 @@
   <div class="wrap topbar-row">
     <span class="brand-ribbon"><span class="dot"></span> CLAUDE CODE PLUGIN · OPEN SOURCE<br><a href="https://github.com/atuljha23/holocron">GITHUB.COM/ATULJHA23/HOLOCRON</a> · <span class="muted">JEDI ARCHIVES</span></span>
     <span class="version">
-      <span class="vnum">v0.2.0</span>
+      <span class="vnum">v0.3.0</span>
       <span class="vlabel">LATEST TRANSMISSION</span>
     </span>
   </div>
@@ -36,21 +36,21 @@
   <div class="hero-text">
     <h1 class="title">Holocron</h1>
     <p class="lede">
-      A <strong>Jedi council</strong> for your codebase — 13 role-specialist agents, 20 domain commands, 10 skills, and a SQLite-backed <strong>learning crystal</strong> that compounds your corrections across sessions.
+      A <strong>Jedi council</strong> for your codebase — 14 role-specialist agents, 24 domain commands, 11 skills, a SQLite-backed <strong>learning crystal</strong> that compounds your corrections across sessions, and a <strong>token economy</strong> that makes every $ of Claude Code usage visible.
     </p>
     <p class="chips">
-      <span class="chip">13 Agents</span>
-      <span class="chip">20 Commands</span>
-      <span class="chip">10 Skills</span>
-      <span class="chip">10 Hook Scripts</span>
+      <span class="chip">14 Agents</span>
+      <span class="chip">24 Commands</span>
+      <span class="chip">11 Skills</span>
+      <span class="chip">13 Hook Scripts</span>
       <span class="chip">6 Events</span>
       <span class="chip">SQLite + FTS5</span>
+      <span class="chip">Cost tracking</span>
       <span class="chip">MIT</span>
     </p>
     <p class="whats-new">
-      <span class="new-badge">NEW IN v0.2.0</span>
-      Jedi Council expands: <code>@threat-modeler</code>, <code>@sre-engineer</code>, <code>@data-engineer</code>.
-      Crystal-powered <code>/holocron:insights</code>. Pro-workflow-inspired <code>/worktree</code>, <code>/permission-tune</code>, <code>/llm-gate</code>.
+      <span class="new-badge">NEW IN v0.3.0</span>
+      <strong>Token economy.</strong> Every session's $, token counts, cache hit rate, and per-model split are logged and browsable via <code>/holocron:cost</code>. Set a <code>/holocron:budget</code>. Prune MCP overhead with <code>/holocron:mcp-audit</code>. Ranked savings proposals from <code>@cost-analyst</code>.
     </p>
   </div>
   <div class="hero-crystal" aria-hidden="true">
@@ -93,7 +93,7 @@
   <!-- 02 -->
   <article class="panel">
     <div class="tag">02 · JEDI COUNCIL</div>
-    <h2>13 Role Specialists</h2>
+    <h2>14 Role Specialists</h2>
     <table class="kv">
       <tr><th scope="row">@architect</th><td>Design, ADRs, tradeoffs</td></tr>
       <tr><th scope="row">@frontend-engineer</th><td>React · Vue · Svelte · UX</td></tr>
@@ -102,9 +102,10 @@
       <tr><th scope="row">@a11y-auditor</th><td>WCAG 2.2 AA</td></tr>
       <tr><th scope="row">@perf-engineer</th><td>Web Vitals · N+1</td></tr>
       <tr><th scope="row">@security-reviewer</th><td>OWASP · authz · crypto</td></tr>
-      <tr><th scope="row">@threat-modeler</th><td>STRIDE / LINDDUN <span class="new-pill">NEW</span></td></tr>
-      <tr><th scope="row">@sre-engineer</th><td>Docker · k8s · CI · SLOs <span class="new-pill">NEW</span></td></tr>
-      <tr><th scope="row">@data-engineer</th><td>SQL · dbt · pipelines <span class="new-pill">NEW</span></td></tr>
+      <tr><th scope="row">@threat-modeler</th><td>STRIDE / LINDDUN</td></tr>
+      <tr><th scope="row">@sre-engineer</th><td>Docker · k8s · CI · SLOs</td></tr>
+      <tr><th scope="row">@data-engineer</th><td>SQL · dbt · pipelines</td></tr>
+      <tr><th scope="row">@cost-analyst</th><td>Ranked $ savings from usage data <span class="new-pill">NEW</span></td></tr>
       <tr><th scope="row">@debugger</th><td>Hypothesis-driven triage</td></tr>
       <tr><th scope="row">@code-reviewer</th><td>Staff-level PR review</td></tr>
       <tr><th scope="row">@docs-writer</th><td>READMEs · runbooks · ADRs</td></tr>
@@ -117,10 +118,10 @@
     <div class="tag">03 · WHAT'S INSIDE</div>
     <h2>Plugin Inventory</h2>
     <div class="stats">
-      <div class="stat"><b>13</b><span>Agents</span></div>
-      <div class="stat"><b>20</b><span>Commands</span></div>
-      <div class="stat"><b>10</b><span>Skills</span></div>
-      <div class="stat"><b>10</b><span>Hook Scripts</span></div>
+      <div class="stat"><b>14</b><span>Agents</span></div>
+      <div class="stat"><b>24</b><span>Commands</span></div>
+      <div class="stat"><b>11</b><span>Skills</span></div>
+      <div class="stat"><b>13</b><span>Hook Scripts</span></div>
       <div class="stat"><b>6</b><span>Hook Events</span></div>
       <div class="stat"><b>4</b><span>Rules</span></div>
       <div class="stat"><b>4</b><span>Contexts</span></div>
@@ -213,7 +214,7 @@
   <!-- 06 -->
   <article class="panel">
     <div class="tag">06 · COMMAND ROSTER</div>
-    <h2>20 Slash Commands</h2>
+    <h2>24 Slash Commands</h2>
     <div class="subtag">META · WORKFLOW</div>
     <table class="cmd-table">
       <tr><th scope="row"><code>/holocron:onboard</code></th><td>Draft a repo-appropriate CLAUDE.md</td></tr>
@@ -240,15 +241,22 @@
     </table>
     <div class="subtag">OPS · GATES</div>
     <table class="cmd-table">
-      <tr><th scope="row"><code>/holocron:permission-tune</code></th><td>Analyze denials · suggest allow/deny rules <span class="new-pill">NEW</span></td></tr>
-      <tr><th scope="row"><code>/holocron:llm-gate</code></th><td>AI verdict before destructive ops <span class="new-pill">NEW</span></td></tr>
+      <tr><th scope="row"><code>/holocron:permission-tune</code></th><td>Analyze denials · suggest allow/deny rules</td></tr>
+      <tr><th scope="row"><code>/holocron:llm-gate</code></th><td>AI verdict before destructive ops</td></tr>
+    </table>
+    <div class="subtag">TOKEN ECONOMY</div>
+    <table class="cmd-table">
+      <tr><th scope="row"><code>/holocron:cost</code></th><td>$ and tokens across sessions · cache hit rate <span class="new-pill">NEW</span></td></tr>
+      <tr><th scope="row"><code>/holocron:budget</code></th><td>Set per-session / daily / monthly caps <span class="new-pill">NEW</span></td></tr>
+      <tr><th scope="row"><code>/holocron:mcp-audit</code></th><td>MCP token footprint · prune unused servers <span class="new-pill">NEW</span></td></tr>
+      <tr><th scope="row"><code>/holocron:context-size</code></th><td>Snapshot context · find trim candidates <span class="new-pill">NEW</span></td></tr>
     </table>
   </article>
 
   <!-- 07 -->
   <article class="panel">
     <div class="tag">07 · SKILL LIBRARY</div>
-    <h2>10 Cross-Cutting Rubrics</h2>
+    <h2>11 Cross-Cutting Rubrics</h2>
     <div class="skill-grid">
       <div class="sk"><b>context-engineering</b><span class="hook-desc">Write · Select · Compress · Isolate</span></div>
       <div class="sk"><b>test-patterns</b><span class="hook-desc">Deep assertions over spies · AAA</span></div>
@@ -258,14 +266,58 @@
       <div class="sk"><b>perf-checklist</b><span class="hook-desc">Core Web Vitals · query rubric</span></div>
       <div class="sk"><b>debug-playbook</b><span class="hook-desc">Hypothesis-driven triage</span></div>
       <div class="sk"><b>pr-review-rubric</b><span class="hook-desc">What a staff engineer asks</span></div>
-      <div class="sk"><b>observability-checklist</b><span class="hook-desc">Logs · traces · metrics · correlation <span class="new-pill">NEW</span></span></div>
-      <div class="sk"><b>migration-patterns</b><span class="hook-desc">Expand / contract · backfill · online DDL <span class="new-pill">NEW</span></span></div>
+      <div class="sk"><b>observability-checklist</b><span class="hook-desc">Logs · traces · metrics · correlation</span></div>
+      <div class="sk"><b>migration-patterns</b><span class="hook-desc">Expand / contract · backfill · online DDL</span></div>
+      <div class="sk"><b>token-economy</b><span class="hook-desc">Model tiering · cache hygiene · Read discipline <span class="new-pill">NEW</span></span></div>
     </div>
   </article>
 
-  <!-- 08 -->
+  <!-- 08 · NEW in v0.3.0 -->
   <article class="panel wide">
-    <div class="tag">08 · QUICKSTART BY ROLE</div>
+    <div class="tag">08 · TOKEN ECONOMY <span class="new-pill">NEW IN v0.3.0</span></div>
+    <h2>Your $ and cache, visible</h2>
+    <p class="lede small">
+      The <code>Stop</code> hook parses every session's transcript and writes per-session token &amp; cost records to <code>~/.holocron/sessions/</code>. You can browse them, set budgets that warn you in-session, prune MCP overhead, and get ranked savings from <code>@cost-analyst</code>.
+    </p>
+    <div class="role-grid">
+      <div class="role">
+        <div class="role-label">SEE YOUR SPEND</div>
+        <pre><code># Last 30 days, grouped by model
+/holocron:cost --breakdown
+
+# Top sessions by $
+/holocron:cost --by-session
+
+# Rolling week
+/holocron:cost --since 7d</code></pre>
+      </div>
+      <div class="role">
+        <div class="role-label">SET A BUDGET</div>
+        <pre><code># $2 per session, $10 per day
+/holocron:budget --session 2 --daily 10
+
+# The Stop hook warns at 80% / 100%
+# Stored at ~/.holocron/budget.json</code></pre>
+      </div>
+      <div class="role">
+        <div class="role-label">CUT THE FAT</div>
+        <pre><code>/holocron:mcp-audit       # MCP token footprint
+/holocron:context-size    # Biggest context offenders
+@cost-analyst             # Ranked savings from usage data</code></pre>
+      </div>
+      <div class="role">
+        <div class="role-label">AUTOMATIC NUDGES</div>
+        <pre><code># Large file Read without offset/limit → nudge
+# Tool output > ~8k tokens → nudge
+# Cache hit rate low in /cost → tip on what's busting it</code></pre>
+      </div>
+    </div>
+    <p class="note">Pricing is hardcoded for Claude 4.x (Opus / Sonnet / Haiku). Update <code>scripts/holocron-usage.js</code> when rates change.</p>
+  </article>
+
+  <!-- 09 -->
+  <article class="panel wide">
+    <div class="tag">09 · QUICKSTART BY ROLE</div>
     <h2>Pick Your Lightsaber</h2>
     <div class="role-grid">
       <div class="role">
@@ -311,9 +363,9 @@
     </div>
   </article>
 
-  <!-- 09 -->
+  <!-- 10 -->
   <article class="panel">
-    <div class="tag">09 · INSTALL</div>
+    <div class="tag">10 · INSTALL</div>
     <h2>Enter the Archive</h2>
     <pre class="install"><code><span class="c">// 1 — add the marketplace</span>
 /plugin marketplace add atuljha23/holocron
@@ -331,22 +383,23 @@
     </p>
   </article>
 
-  <!-- 10 -->
+  <!-- 11 -->
   <article class="panel">
-    <div class="tag">10 · PHILOSOPHY</div>
+    <div class="tag">11 · PHILOSOPHY</div>
     <h2>Measured Force</h2>
     <ul class="bullets spacious">
       <li><b>Role specialists beat generalists.</b> A staff reviewer, an a11y auditor, and a QA engineer think differently. The council reflects that.</li>
       <li><b>Corrections compound.</b> A rule captured once should never need saying twice.</li>
-      <li><b>Local-first.</b> Your crystal lives on your machine. No telemetry. No phone home.</li>
+      <li><b>Cost is a first-class citizen.</b> If you can't see what a session costs, you can't decide whether it was worth it.</li>
+      <li><b>Local-first.</b> Your crystal and usage logs live on your machine. No telemetry. No phone home.</li>
       <li><b>Fail safe.</b> Hooks never crash the session. Advisory by default; block only where evidence is high.</li>
       <li><b>Read before write.</b> Every time. No exceptions for "small changes".</li>
     </ul>
   </article>
 
-  <!-- 11 -->
+  <!-- 12 -->
   <article class="panel">
-    <div class="tag">11 · CREDITS</div>
+    <div class="tag">12 · CREDITS</div>
     <h2>Acknowledgements</h2>
     <p>Structural inspiration: <a href="https://github.com/rohitg00/pro-workflow">rohitg00/pro-workflow</a> (MIT). Holocron reimplements the persistent-learning idea from scratch and builds role-specialist content on top.</p>
     <p>Plugin authoring reference: <a href="https://docs.claude.com/en/docs/claude-code/plugins">Anthropic's Claude Code plugin docs</a>.</p>

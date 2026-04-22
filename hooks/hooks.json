@@ -39,6 +39,16 @@
         "description": "Enforce read-before-write; scan incoming content for secrets."
       },
       {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/read-budget.js\""
+          }
+        ],
+        "description": "Nudge range reads on large files to protect context and cache hits."
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {
@@ -75,6 +85,16 @@
           }
         ],
         "description": "On test-command failure, suggest /holocron:learn to capture the lesson."
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/tool-output-budget.js\""
+          }
+        ],
+        "description": "Warn when a tool returns a large payload (context bloat)."
       }
     ],
     "PreCompact": [
@@ -93,10 +113,14 @@
         "hooks": [
           {
             "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/session-usage-log.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/stop-capture-prompt.js\""
           }
         ],
-        "description": "On end-of-turn, if an unresolved correction is detected, prompt capture."
+        "description": "Log session token usage to the crystal; nudge correction capture."
       }
     ]
   }

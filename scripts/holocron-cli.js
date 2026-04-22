@@ -25,6 +25,8 @@ COMMANDS
   delete <id>  Delete a learning. Flag: --scope=user|project (default user).
   export       Dump all learnings as JSON to stdout.
   insights     Correction heatmap — top tags, weekly trend, review candidates.
+  cost         Token + $ usage across sessions. Flags: --since 7d|30d|all, --by-session, --breakdown
+  budget       Show or set token budgets. Flags: --session=N --daily=N --monthly=N --clear
   inventory    Count agents/commands/skills/hooks/scripts in the plugin.
   doctor       Self-check the plugin install.
   help         Show this message.
@@ -204,6 +206,111 @@ function cmdInsights() {
   console.log();
 }
 
+function cmdCost(args) {
+  const usage = require('./holocron-usage');
+  const since = args.flags.since || '30d';
+  const sessions = usage.filterSince(usage.readAllSessions(), since);
+
+  if (!sessions.length) {
+    console.log(`(no sessions logged${since !== 'all' ? ` in the last ${since}` : ''})`);
+    console.log(`\nThe Stop hook logs usage to ~/.holocron/sessions/. After a few sessions, this view will populate.`);
+    return;
+  }
+
+  const byModel = {};
+  let totalCost = 0, totalIn = 0, totalOut = 0, totalCR = 0, totalCW = 0, totalTurns = 0;
+  for (const s of sessions) {
+    for (const [m, b] of Object.entries(s.byModel || {})) {
+      byModel[m] = byModel[m] || { turns: 0, input_tokens: 0, output_tokens: 0, cache_read_input_tokens: 0, cache_creation_input_tokens: 0, cost_usd: 0, sessions: 0 };
+      byModel[m].turns += b.turns || 0;
+      byModel[m].input_tokens += b.input_tokens || 0;
+      byModel[m].output_tokens += b.output_tokens || 0;
+      byModel[m].cache_read_input_tokens += b.cache_read_input_tokens || 0;
+      byModel[m].cache_creation_input_tokens += b.cache_creation_input_tokens || 0;
+      byModel[m].cost_usd += usage.costOf({ model: m, ...b });
+      byModel[m].sessions += 1;
+    }
+    totalCost += s.totals?.cost_usd || 0;
+    totalIn += s.totals?.input_tokens || 0;
+    totalOut += s.totals?.output_tokens || 0;
+    totalCR += s.totals?.cache_read_input_tokens || 0;
+    totalCW += s.totals?.cache_creation_input_tokens || 0;
+    totalTurns += s.totals?.turns || 0;
+  }
+  const cacheable = totalCR + totalCW;
+  const cacheHit = cacheable > 0 ? totalCR / cacheable : null;
+
+  const fmt = n => n == null ? '—' : n.toLocaleString();
+  const usd = n => '$' + n.toFixed(n < 0.1 ? 4 : n < 10 ? 2 : 2);
+
+  console.log(`Holocron cost — last ${since}  (${sessions.length} session${sessions.length === 1 ? '' : 's'})\n`);
+  console.log(`  Total cost:        ${usd(totalCost)}`);
+  console.log(`  Turns:             ${fmt(totalTurns)}`);
+  console.log(`  Input tokens:      ${fmt(totalIn)}`);
+  console.log(`  Output tokens:     ${fmt(totalOut)}`);
+  console.log(`  Cache-read:        ${fmt(totalCR)}  ${cacheHit != null ? '(hit rate ' + (cacheHit * 100).toFixed(0) + '%)' : ''}`);
+  console.log(`  Cache-write:       ${fmt(totalCW)}`);
+  console.log();
+
+  if (args.flags.breakdown || Object.keys(byModel).length > 1) {
+    console.log(`By model:`);
+    const rows = Object.entries(byModel).sort((a, b) => b[1].cost_usd - a[1].cost_usd);
+    for (const [m, b] of rows) {
+      const cr = b.cache_read_input_tokens, cw = b.cache_creation_input_tokens;
+      const hit = (cr + cw) > 0 ? cr / (cr + cw) : null;
+      console.log(`  ${String(m).padEnd(28)}  ${usd(b.cost_usd).padStart(8)}  ${fmt(b.turns).padStart(5)} turns  hit ${hit != null ? (hit * 100).toFixed(0) + '%' : '—'}`);
+    }
+    console.log();
+  }
+
+  if (args.flags['by-session']) {
+    console.log(`By session (top 10 by cost):`);
+    const sorted = [...sessions].sort((a, b) => (b.totals?.cost_usd || 0) - (a.totals?.cost_usd || 0)).slice(0, 10);
+    for (const s of sorted) {
+      const when = (s.ended_at || s.updated_at || '').slice(0, 16).replace('T', ' ');
+      const id = s.session_id ? s.session_id.slice(0, 8) : '????????';
+      console.log(`  ${when}  ${id}  ${usd(s.totals?.cost_usd || 0).padStart(8)}  ${fmt(s.totals?.turns || 0).padStart(4)}t`);
+    }
+    console.log();
+  }
+
+  const budget = usage.readBudget();
+  if (budget) {
+    console.log(`Budgets configured:`);
+    if (budget.session_usd) console.log(`  per-session: ${usd(budget.session_usd)}`);
+    if (budget.daily_usd)   console.log(`  daily:       ${usd(budget.daily_usd)}`);
+    if (budget.monthly_usd) console.log(`  monthly:     ${usd(budget.monthly_usd)}`);
+    console.log();
+  } else {
+    console.log(`(no budget set — \`holocron budget --session 2.00 --daily 10.00\` to set one)`);
+  }
+
+  // One actionable observation
+  if (cacheHit != null && cacheHit < 0.5 && totalTurns > 5) {
+    console.log(`Tip: cache hit rate is ${(cacheHit * 100).toFixed(0)}% (below 50%). Something is busting Anthropic's 5-min prompt cache — usually a timestamp or volatile value in CLAUDE.md or injected context.`);
+  }
+}
+
+function cmdBudget(args) {
+  const usage = require('./holocron-usage');
+  const f = args.flags;
+  if (f.clear) {
+    try { require('fs').unlinkSync(usage.budgetPath()); } catch (_) {}
+    console.log('Cleared all budgets.');
+    return;
+  }
+  let current = usage.readBudget() || {};
+  let changed = false;
+  if (f.session !== undefined) { current.session_usd = parseFloat(f.session); changed = true; }
+  if (f.daily   !== undefined) { current.daily_usd   = parseFloat(f.daily);   changed = true; }
+  if (f.monthly !== undefined) { current.monthly_usd = parseFloat(f.monthly); changed = true; }
+  if (changed) {
+    usage.writeBudget(current);
+    console.log(`Budget updated: ${usage.budgetPath()}`);
+  }
+  console.log(JSON.stringify(current, null, 2));
+}
+
 function cmdInventory() {
   const counts = {
     agents: countFiles('agents', '.md'),
@@ -286,7 +393,7 @@ function countHookEvents() {
   } catch { return 0; }
 }
 function countMetaScripts() {
-  const meta = new Set(['holocron-db.js', 'holocron-cli.js', '_hook-utils.js', '_bootstrap.js']);
+  const meta = new Set(['holocron-db.js', 'holocron-cli.js', '_hook-utils.js', '_bootstrap.js', 'holocron-usage.js']);
   const p = path.join(ROOT, 'scripts');
   if (!fs.existsSync(p)) return 0;
   return fs.readdirSync(p).filter(f => meta.has(f)).length;
@@ -309,6 +416,8 @@ switch (cmd) {
   case 'delete':     cmdDelete(rest); break;
   case 'export':     cmdExport(); break;
   case 'insights':   cmdInsights(); break;
+  case 'cost':       cmdCost(rest); break;
+  case 'budget':     cmdBudget(rest); break;
   case 'inventory':  cmdInventory(); break;
   case 'doctor':     cmdDoctor(); break;
   case 'help':

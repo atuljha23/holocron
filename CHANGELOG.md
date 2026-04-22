@@ -5,6 +5,33 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-04-22
+
+### Added — Token economy
+The v0.3.0 theme: make your Claude Code cost visible and give you the levers to cut it.
+
+**New agent:**
+- **`@cost-analyst`** — reads `~/.holocron/sessions/*.json`, correlates cost to behavior, proposes 3–5 ranked savings opportunities with expected $ impact and how to verify.
+
+**New commands:**
+- **`/holocron:cost`** — total $, token breakdown, cache hit rate, per-model split across all logged sessions. Flags: `--since 7d|30d|all`, `--by-session`, `--breakdown`.
+- **`/holocron:budget`** — set per-session / daily / monthly $ caps. The Stop hook warns at 80% / 100%. Stored at `~/.holocron/budget.json`.
+- **`/holocron:mcp-audit`** — inventory active MCP servers, estimate schema token cost per turn, recommend pruning.
+- **`/holocron:context-size`** — snapshot the current session's context footprint (transcript, CLAUDE.md, MCP schemas, big reads) and identify trim candidates.
+
+**New skill:**
+- **`token-economy`** — the rubric: model tiering (Haiku/Sonnet/Opus), cache hygiene (the 5-min prompt cache), Read discipline (offset+limit on big files), MCP pruning, subagent isolation.
+
+**New hooks:**
+- **`Stop` → `session-usage-log.js`** — after every turn, parse the session's transcript and write a per-session record to `~/.holocron/sessions/<session_id>.json` with token counts by model and computed $ cost. Checks against the configured budget and emits a warning at thresholds.
+- **`PreToolUse Read` → `read-budget.js`** — nudges `offset`+`limit` when a `Read` targets a file > 500 lines and no range is set.
+- **`PostToolUse *` → `tool-output-budget.js`** — flags tool responses >~8k tokens so the next invocation can narrow.
+
+**New module:**
+- `scripts/holocron-usage.js` — transcript parsing, pricing table (Opus/Sonnet/Haiku 4.x), session aggregation. The pricing table is hardcoded; update it if Anthropic's rates change.
+
+**Inventory**: 14 agents · 24 commands · 11 skills · 13 hook scripts across 6 events.
+
 ## [0.2.1] — 2026-04-22
 
 ### Fixed
