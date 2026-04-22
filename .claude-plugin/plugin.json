@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "holocron",
-  "version": "0.1.1",
-  "description": "A Jedi council for your codebase: 10 role-specialist agents, 15 domain commands (a11y, perf, QA, security, ADR), 8 skills, and a SQLite-backed learning crystal that compounds your corrections across sessions.",
+  "version": "0.2.0",
+  "description": "A Jedi council for your codebase: 13 role-specialist agents, 20 domain commands (a11y, perf, QA, security, threat-modeling, SRE, ADR, crystal insights), 10 skills, and a SQLite-backed learning crystal that compounds your corrections across sessions.",
   "author": {
     "name": "Atul Kumar Jha",
     "url": "https://github.com/atuljha23"

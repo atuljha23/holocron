@@ -1,6 +1,6 @@
 {
   "name": "holocron",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Claude Code plugin with a Jedi council of role-specialist agents, domain commands (a11y/perf/QA/security), and a SQLite-backed learning crystal that compounds your corrections across sessions.",
   "license": "MIT",
   "author": {

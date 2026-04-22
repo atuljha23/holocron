@@ -24,6 +24,7 @@ COMMANDS
   show <id>    Show a single learning by id.
   delete <id>  Delete a learning. Flag: --scope=user|project (default user).
   export       Dump all learnings as JSON to stdout.
+  insights     Correction heatmap — top tags, weekly trend, review candidates.
   inventory    Count agents/commands/skills/hooks/scripts in the plugin.
   doctor       Self-check the plugin install.
   help         Show this message.
@@ -121,6 +122,74 @@ function cmdExport() {
   console.log(JSON.stringify(db.exportLearnings(), null, 2));
 }
 
+function cmdInsights() {
+  const db = lazyDb();
+  if (!db.isReady()) die("better-sqlite3 not installed.");
+  const all = db.exportLearnings();
+  if (!all.length) {
+    console.log('(empty holocron — capture your first rule with `/holocron:learn`)');
+    return;
+  }
+
+  const scopeCounts = all.reduce((m, r) => (m[r._source] = (m[r._source] || 0) + 1, m), {});
+
+  const tagFreq = {};
+  for (const r of all) {
+    if (!r.tags) continue;
+    for (const t of r.tags.split(',').map(s => s.trim()).filter(Boolean)) {
+      tagFreq[t] = (tagFreq[t] || 0) + 1;
+    }
+  }
+  const topTags = Object.entries(tagFreq).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+  const byWeek = {};
+  for (const r of all) {
+    const d = new Date(r.created_at);
+    if (isNaN(d.getTime())) continue;
+    const day = d.getUTCDay();
+    const monday = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    monday.setUTCDate(monday.getUTCDate() - ((day + 6) % 7));
+    const key = monday.toISOString().slice(0, 10);
+    byWeek[key] = (byWeek[key] || 0) + 1;
+  }
+  const weeks = Object.entries(byWeek).sort(([a], [b]) => a.localeCompare(b)).slice(-8);
+  const maxW = Math.max(1, ...weeks.map(([, n]) => n));
+
+  const oldest = [...all]
+    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+    .slice(0, 5);
+
+  const pad = s => String(s).padEnd(22).slice(0, 22);
+  const bar = (n, max, w) => '█'.repeat(Math.max(1, Math.round((n / max) * w)));
+
+  console.log(`Holocron insights\n`);
+  console.log(`Learnings: ${all.length} total  (user=${scopeCounts.user || 0}, project=${scopeCounts.project || 0})\n`);
+
+  if (topTags.length) {
+    const maxT = topTags[0][1];
+    console.log('Top tags:');
+    for (const [t, n] of topTags) {
+      console.log(`  ${pad(t)} ${bar(n, maxT, 30)} ${n}`);
+    }
+    console.log();
+  }
+
+  if (weeks.length) {
+    console.log('Weekly additions (last 8 weeks, ISO week starting Mon):');
+    for (const [week, n] of weeks) {
+      console.log(`  ${week}  ${bar(n, maxW, 20)} ${n}`);
+    }
+    console.log();
+  }
+
+  console.log('Oldest rules (review candidates — retire or refresh):');
+  for (const r of oldest) {
+    const when = (r.created_at || '').slice(0, 10);
+    console.log(`  #${String(r.id).padStart(3)}  ${when}  (${r._source})  ${r.title}`);
+  }
+  console.log();
+}
+
 function cmdInventory() {
   const counts = {
     agents: countFiles('agents', '.md'),
@@ -203,7 +272,7 @@ function countHookEvents() {
   } catch { return 0; }
 }
 function countMetaScripts() {
-  const meta = new Set(['holocron-db.js', 'holocron-cli.js', '_hook-utils.js']);
+  const meta = new Set(['holocron-db.js', 'holocron-cli.js', '_hook-utils.js', '_bootstrap.js']);
   const p = path.join(ROOT, 'scripts');
   if (!fs.existsSync(p)) return 0;
   return fs.readdirSync(p).filter(f => meta.has(f)).length;
@@ -225,6 +294,7 @@ switch (cmd) {
   case 'show':       cmdShow(rest); break;
   case 'delete':     cmdDelete(rest); break;
   case 'export':     cmdExport(); break;
+  case 'insights':   cmdInsights(); break;
   case 'inventory':  cmdInventory(); break;
   case 'doctor':     cmdDoctor(); break;
   case 'help':
