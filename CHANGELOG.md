@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.3.1] — 2026-04-22
+
+### Fixed
+- Bootstrap escalation when `prebuild-install` silently skips. Previously, `npm install` would report success but leave the native `better-sqlite3` binding uncompiled, and the sentinel would latch a permanent failure. The bootstrap now walks four steps — `npm install` → `npm rebuild better-sqlite3` → `npm rebuild --build-from-source` → clean reinstall — and only writes the sentinel after all escalations fail. Verified end-to-end on a fresh plugin cache dir where the first attempt silently no-ops the binding.
+
 ## [0.3.0] — 2026-04-22
 
 ### Added — Token economy
