@@ -6,6 +6,9 @@ A Claude Code plugin that gives you a Jedi council of role-specialist agents, do
 
 **[atuljha23.github.io/holocron](https://atuljha23.github.io/holocron/)** · **v0.2.0** · MIT · targets SWEs, frontend engineers, backend engineers, QAs, SREs, and security.
 
+<img width="1723" height="950" alt="Screenshot 2026-04-22 at 14 41 57" src="https://github.com/user-attachments/assets/7f2995ab-f359-4a0a-909e-9735fe45b1c9" />
+
+
 ---
 
 ## Why holocron
