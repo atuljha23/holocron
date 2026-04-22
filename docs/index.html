@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Holocron — A Jedi Council for Claude Code</title>
+  <meta name="description" content="Holocron is a Claude Code plugin with 10 role-specialist agents, 15 domain commands, 8 skills, and a SQLite-backed learning crystal that compounds your corrections across sessions.">
+  <meta property="og:title" content="Holocron — A Jedi Council for Claude Code">
+  <meta property="og:description" content="10 specialist agents, 15 domain commands, 8 skills, and a learning crystal that compounds your corrections.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://atuljha23.github.io/holocron/">
+  <meta name="theme-color" content="#070a12">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'&gt;&lt;defs&gt;&lt;linearGradient id='g' x1='0' y1='0' x2='1' y2='1'&gt;&lt;stop offset='0' stop-color='%234db9ff'/&gt;&lt;stop offset='1' stop-color='%231f4f80'/&gt;&lt;/linearGradient&gt;&lt;/defs&gt;&lt;rect x='6' y='6' width='20' height='20' fill='url(%23g)' stroke='%239fd6ff' stroke-width='1.2'/&gt;&lt;rect x='10' y='10' width='12' height='12' fill='none' stroke='%23cfeaff' stroke-width='0.8' opacity='0.7'/&gt;&lt;/svg&gt;">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="starfield" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="wrap topbar-row">
+    <span class="brand-ribbon"><span class="dot"></span> CLAUDE CODE PLUGIN · OPEN SOURCE<br><a href="https://github.com/atuljha23/holocron">GITHUB.COM/ATULJHA23/HOLOCRON</a> · <span class="muted">JEDI ARCHIVES</span></span>
+    <span class="version">
+      <span class="vnum">v0.1.1</span>
+      <span class="vlabel">LATEST TRANSMISSION</span>
+    </span>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="hero">
+  <div class="hero-text">
+    <h1 class="title">Holocron</h1>
+    <p class="lede">
+      A <strong>Jedi council</strong> for your codebase — 10 role-specialist agents, 15 domain commands, 8 skills, and a SQLite-backed <strong>learning crystal</strong> that compounds your corrections across sessions.
+    </p>
+    <p class="chips">
+      <span class="chip">10 Agents</span>
+      <span class="chip">15 Commands</span>
+      <span class="chip">8 Skills</span>
+      <span class="chip">10 Hook Scripts</span>
+      <span class="chip">6 Events</span>
+      <span class="chip">SQLite + FTS5</span>
+      <span class="chip">MIT</span>
+    </p>
+  </div>
+  <div class="hero-crystal" aria-hidden="true">
+    <div class="cube">
+      <div class="face f-front"></div>
+      <div class="face f-back"></div>
+      <div class="face f-right"></div>
+      <div class="face f-left"></div>
+      <div class="face f-top"></div>
+      <div class="face f-bottom"></div>
+    </div>
+  </div>
+</section>
+
+<div class="grid grid-3">
+
+  <!-- 01 -->
+  <article class="panel">
+    <div class="tag">01 · CORE ARCHITECTURE</div>
+    <h2>Command → Agent → Skill → Hook → Crystal</h2>
+    <div class="flow">
+      <div class="flow-node"><b>Command</b><span>user input · slash</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><b>Agent</b><span>role specialist</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><b>Skill</b><span>domain rubric</span></div>
+    </div>
+    <div class="flow flow-bottom">
+      <div class="flow-node"><b>Hook</b><span>event-driven</span></div>
+      <div class="flow-arrow">↔</div>
+      <div class="flow-node"><b>Crystal</b><span>persistent SQLite</span></div>
+    </div>
+    <ul class="bullets">
+      <li>Agents hand off explicitly — none try to be everything.</li>
+      <li>Hooks auto-load learnings and guard writes.</li>
+      <li>Crystal survives compaction, session restart, and new repos.</li>
+    </ul>
+  </article>
+
+  <!-- 02 -->
+  <article class="panel">
+    <div class="tag">02 · JEDI COUNCIL</div>
+    <h2>10 Role Specialists</h2>
+    <table class="kv">
+      <tr><th>@architect</th><td>Design, ADRs, tradeoffs</td></tr>
+      <tr><th>@frontend-engineer</th><td>React · Vue · Svelte · UX</td></tr>
+      <tr><th>@backend-engineer</th><td>APIs · data · services</td></tr>
+      <tr><th>@qa-engineer</th><td>Strategy · gaps · flakes</td></tr>
+      <tr><th>@a11y-auditor</th><td>WCAG 2.2 AA</td></tr>
+      <tr><th>@perf-engineer</th><td>Web Vitals · N+1</td></tr>
+      <tr><th>@security-reviewer</th><td>OWASP · authz · crypto</td></tr>
+      <tr><th>@debugger</th><td>Hypothesis-driven triage</td></tr>
+      <tr><th>@code-reviewer</th><td>Staff-level PR review</td></tr>
+      <tr><th>@docs-writer</th><td>READMEs · runbooks · ADRs</td></tr>
+    </table>
+    <p class="note">Each has a rubric and a <em>"not my jurisdiction"</em> delegation table.</p>
+  </article>
+
+  <!-- 03 -->
+  <article class="panel">
+    <div class="tag">03 · WHAT'S INSIDE</div>
+    <h2>Plugin Inventory</h2>
+    <div class="stats">
+      <div class="stat"><b>10</b><span>Agents</span></div>
+      <div class="stat"><b>15</b><span>Commands</span></div>
+      <div class="stat"><b>8</b><span>Skills</span></div>
+      <div class="stat"><b>10</b><span>Hook Scripts</span></div>
+      <div class="stat"><b>6</b><span>Hook Events</span></div>
+      <div class="stat"><b>4</b><span>Rules</span></div>
+      <div class="stat"><b>4</b><span>Contexts</span></div>
+      <div class="stat"><b>MIT</b><span>License</span></div>
+    </div>
+    <div class="subtag">DATABASE</div>
+    <div class="tech-chips">
+      <span class="tech">SQLite</span>
+      <span class="tech">FTS5</span>
+      <span class="tech">Porter tokenizer</span>
+      <span class="tech">User + project scope</span>
+    </div>
+    <div class="subtag">PLATFORMS</div>
+    <div class="tech-chips">
+      <span class="tech">Claude Code</span>
+      <span class="tech muted-tech">Cursor (planned)</span>
+    </div>
+  </article>
+
+  <!-- 04 -->
+  <article class="panel wide">
+    <div class="tag">04 · THE LEARNING CRYSTAL</div>
+    <h2>Corrections That Compound</h2>
+    <p class="lede small">
+      Every correction you capture becomes a durable rule — stored in SQLite with full-text search, indexed by <code>bm25</code>, loaded on every session start, and matched against every prompt you send.
+    </p>
+    <div class="ladder">
+      <div class="rung">
+        <div class="rung-n">1</div>
+        <div class="rung-text"><b>Correct</b><span>user redirects the model</span></div>
+      </div>
+      <div class="rung-arrow">↓</div>
+      <div class="rung">
+        <div class="rung-n">2</div>
+        <div class="rung-text"><b>Capture</b><span><code>/holocron:learn "&lt;rule&gt;"</code></span></div>
+      </div>
+      <div class="rung-arrow">↓</div>
+      <div class="rung">
+        <div class="rung-n">3</div>
+        <div class="rung-text"><b>Persist</b><span>SQLite + FTS5, local-first</span></div>
+      </div>
+      <div class="rung-arrow">↓</div>
+      <div class="rung">
+        <div class="rung-n">4</div>
+        <div class="rung-text"><b>Recall</b><span>injected on SessionStart + PromptSubmit</span></div>
+      </div>
+    </div>
+    <div class="scope-grid">
+      <div class="scope-box">
+        <b class="scope-label">USER SCOPE</b>
+        <code>~/.holocron/learnings.db</code>
+        <span class="scope-help">Follows you across every project.</span>
+      </div>
+      <div class="scope-box">
+        <b class="scope-label">PROJECT SCOPE</b>
+        <code>&lt;repo&gt;/.holocron/learnings.db</code>
+        <span class="scope-help">Lives with the repo. Commit or ignore per team.</span>
+      </div>
+    </div>
+    <blockquote>
+      "The holocron was the ultimate Jedi repository of knowledge. What the archives preserve, the archives protect."
+    </blockquote>
+  </article>
+
+  <!-- 05 -->
+  <article class="panel">
+    <div class="tag">05 · HOOK AUTOMATION</div>
+    <h2>6 Events · 10 Scripts</h2>
+    <div class="hook-list">
+      <div class="hook"><span class="hook-ev ev-session">SessionStart</span><b>Load crystal</b><span>Inject top-K recent learnings</span></div>
+      <div class="hook"><span class="hook-ev ev-prompt">UserPromptSubmit</span><b>FTS match</b><span>Inject top 3 relevant rules</span></div>
+      <div class="hook"><span class="hook-ev ev-pre">PreToolUse · Edit</span><b>Read-before-write</b><span>Nudge on unread targets</span></div>
+      <div class="hook"><span class="hook-ev ev-pre">PreToolUse · Edit</span><b>Secret scan</b><span>Block on confident matches</span></div>
+      <div class="hook"><span class="hook-ev ev-pre">PreToolUse · Bash</span><b>Pre-commit gate</b><span>Surface repo quality gates</span></div>
+      <div class="hook"><span class="hook-ev ev-pre">PreToolUse · Bash</span><b>Pre-push nudge</b><span>Suggest /holocron:handoff</span></div>
+      <div class="hook"><span class="hook-ev ev-post">PostToolUse · Edit</span><b>Debug residue</b><span>Flag console.log/debugger/TODO</span></div>
+      <div class="hook"><span class="hook-ev ev-post">PostToolUse · Bash</span><b>Test failure learn</b><span>Nudge /holocron:learn</span></div>
+      <div class="hook"><span class="hook-ev ev-compact">PreCompact</span><b>Snapshot</b><span>Persist session state</span></div>
+      <div class="hook"><span class="hook-ev ev-stop">Stop</span><b>Capture prompt</b><span>Detect correction markers</span></div>
+    </div>
+    <div class="legend">
+      <span><i class="d d-session"></i>Session</span>
+      <span><i class="d d-prompt"></i>Prompt</span>
+      <span><i class="d d-pre"></i>PreTool</span>
+      <span><i class="d d-post"></i>PostTool</span>
+      <span><i class="d d-compact"></i>Compact</span>
+      <span><i class="d d-stop"></i>Stop</span>
+    </div>
+  </article>
+
+  <!-- 06 -->
+  <article class="panel">
+    <div class="tag">06 · COMMAND ROSTER</div>
+    <h2>Slash Commands</h2>
+    <div class="subtag">META · WORKFLOW</div>
+    <table class="cmd-table">
+      <tr><th><code>/holocron:onboard</code></th><td>Draft a repo-appropriate CLAUDE.md</td></tr>
+      <tr><th><code>/holocron:plan</code></th><td>Plan-mode scaffold</td></tr>
+      <tr><th><code>/holocron:develop</code></th><td>Research → Plan → Implement → Review</td></tr>
+      <tr><th><code>/holocron:commit</code></th><td>Quality-gated commit</td></tr>
+      <tr><th><code>/holocron:review</code></th><td>Staff-level review of the diff</td></tr>
+      <tr><th><code>/holocron:handoff</code></th><td>Session handoff doc</td></tr>
+      <tr><th><code>/holocron:learn</code></th><td>Capture a correction</td></tr>
+      <tr><th><code>/holocron:recall</code></th><td>FTS search the crystal</td></tr>
+      <tr><th><code>/holocron:doctor</code></th><td>Self-check install</td></tr>
+    </table>
+    <div class="subtag">DOMAIN</div>
+    <table class="cmd-table">
+      <tr><th><code>/holocron:a11y</code></th><td>WCAG audit on UI diff</td></tr>
+      <tr><th><code>/holocron:perf</code></th><td>Web Vitals · N+1 · indexes</td></tr>
+      <tr><th><code>/holocron:test-gap</code></th><td>Prioritized missing tests</td></tr>
+      <tr><th><code>/holocron:flaky</code></th><td>Flake-triage tree</td></tr>
+      <tr><th><code>/holocron:sec-scan</code></th><td>SAST + secrets + CVE</td></tr>
+      <tr><th><code>/holocron:adr</code></th><td>MADR-style decision record</td></tr>
+    </table>
+  </article>
+
+  <!-- 07 -->
+  <article class="panel">
+    <div class="tag">07 · SKILL LIBRARY</div>
+    <h2>8 Cross-Cutting Rubrics</h2>
+    <div class="skill-grid">
+      <div class="sk"><b>context-engineering</b><span>Write · Select · Compress · Isolate</span></div>
+      <div class="sk"><b>test-patterns</b><span>Deep assertions over spies · AAA</span></div>
+      <div class="sk"><b>api-design</b><span>REST + GraphQL conventions</span></div>
+      <div class="sk"><b>a11y-checklist</b><span>WCAG 2.2 AA walkthrough</span></div>
+      <div class="sk"><b>security-checklist</b><span>OWASP pre-merge sweep</span></div>
+      <div class="sk"><b>perf-checklist</b><span>Core Web Vitals · query rubric</span></div>
+      <div class="sk"><b>debug-playbook</b><span>Hypothesis-driven triage</span></div>
+      <div class="sk"><b>pr-review-rubric</b><span>What a staff engineer asks</span></div>
+    </div>
+  </article>
+
+  <!-- 08 -->
+  <article class="panel wide">
+    <div class="tag">08 · QUICKSTART BY ROLE</div>
+    <h2>Pick Your Lightsaber</h2>
+    <div class="role-grid">
+      <div class="role">
+        <div class="role-label">SOFTWARE ENGINEER</div>
+        <pre><code>/holocron:onboard
+/holocron:plan
+/holocron:develop &lt;feature&gt;
+/holocron:commit
+/holocron:learn "&lt;rule&gt;"</code></pre>
+      </div>
+      <div class="role">
+        <div class="role-label">FRONTEND ENGINEER</div>
+        <pre><code>@frontend-engineer &lt;task&gt;
+/holocron:a11y
+/holocron:perf
+/holocron:test-gap &lt;file&gt;</code></pre>
+      </div>
+      <div class="role">
+        <div class="role-label">BACKEND ENGINEER</div>
+        <pre><code>@backend-engineer &lt;task&gt;
+/holocron:sec-scan
+/holocron:perf
+/holocron:adr "&lt;title&gt;"</code></pre>
+      </div>
+      <div class="role">
+        <div class="role-label">QA ENGINEER</div>
+        <pre><code>@qa-engineer &lt;task&gt;
+/holocron:test-gap &lt;file&gt;
+/holocron:flaky &lt;test&gt;</code></pre>
+      </div>
+    </div>
+  </article>
+
+  <!-- 09 -->
+  <article class="panel">
+    <div class="tag">09 · INSTALL</div>
+    <h2>Enter the Archive</h2>
+    <pre class="install"><code><span class="c">// 1 — add the marketplace</span>
+/plugin marketplace add atuljha23/holocron
+
+<span class="c">// 2 — install the plugin</span>
+/plugin install holocron@holocron
+
+<span class="c">// 3 — reload</span>
+/reload-plugins
+
+<span class="c">// 4 — self-check</span>
+/holocron:doctor</code></pre>
+    <p class="note">
+      First SessionStart runs <code>npm install</code> automatically if the SQLite native binding is missing. Node ≥ 18 required.
+    </p>
+  </article>
+
+  <!-- 10 -->
+  <article class="panel">
+    <div class="tag">10 · PHILOSOPHY</div>
+    <h2>Measured Force</h2>
+    <ul class="bullets spacious">
+      <li><b>Role specialists beat generalists.</b> A staff reviewer, an a11y auditor, and a QA engineer think differently. The council reflects that.</li>
+      <li><b>Corrections compound.</b> A rule captured once should never need saying twice.</li>
+      <li><b>Local-first.</b> Your crystal lives on your machine. No telemetry. No phone home.</li>
+      <li><b>Fail safe.</b> Hooks never crash the session. Advisory by default; block only where evidence is high.</li>
+      <li><b>Read before write.</b> Every time. No exceptions for "small changes".</li>
+    </ul>
+  </article>
+
+  <!-- 11 -->
+  <article class="panel">
+    <div class="tag">11 · CREDITS</div>
+    <h2>Acknowledgements</h2>
+    <p>Structural inspiration: <a href="https://github.com/rohitg00/pro-workflow">rohitg00/pro-workflow</a> (MIT). Holocron reimplements the persistent-learning idea from scratch and builds role-specialist content on top.</p>
+    <p>Plugin authoring reference: <a href="https://docs.claude.com/en/docs/claude-code/plugins">Anthropic's Claude Code plugin docs</a>.</p>
+    <p class="note">Star Wars, Jedi, Sith, and Holocron are trademarks of Lucasfilm Ltd. This project is unaffiliated thematic homage.</p>
+  </article>
+
+</div>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <div>
+      By <b>Atul Jha</b> · <a href="https://github.com/atuljha23/holocron">github.com/atuljha23/holocron</a> · MIT
+    </div>
+    <div class="motto">MAY THE SOURCE BE WITH YOU</div>
+  </div>
+</footer>
+
+</body>
+</html>
