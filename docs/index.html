@@ -282,37 +282,44 @@
     <div class="role-grid">
       <div class="role">
         <div class="role-label">SEE YOUR SPEND</div>
-        <pre><code># Last 30 days, grouped by model
+        <pre><code># $ + tokens + cache hit rate
 /holocron:cost --breakdown
 
-# Top sessions by $
-/holocron:cost --by-session
-
-# Rolling week
-/holocron:cost --since 7d</code></pre>
+# Top sessions by cost
+/holocron:cost --by-session</code></pre>
       </div>
       <div class="role">
         <div class="role-label">SET A BUDGET</div>
-        <pre><code># $2 per session, $10 per day
-/holocron:budget --session 2 --daily 10
+        <pre><code># Per-session + daily caps
+/holocron:budget \
+  --session 2 --daily 10
 
-# The Stop hook warns at 80% / 100%
-# Stored at ~/.holocron/budget.json</code></pre>
+# Stop hook warns at 80% / 100%</code></pre>
       </div>
       <div class="role">
         <div class="role-label">CUT THE FAT</div>
-        <pre><code>/holocron:mcp-audit       # MCP token footprint
-/holocron:context-size    # Biggest context offenders
-@cost-analyst             # Ranked savings from usage data</code></pre>
+        <pre><code># MCP token footprint
+/holocron:mcp-audit
+
+# Biggest context offenders
+/holocron:context-size
+
+# Ranked savings
+@cost-analyst</code></pre>
       </div>
       <div class="role">
         <div class="role-label">AUTOMATIC NUDGES</div>
-        <pre><code># Large file Read without offset/limit → nudge
-# Tool output > ~8k tokens → nudge
-# Cache hit rate low in /cost → tip on what's busting it</code></pre>
+        <pre><code># Large Read, no offset/limit
+#   → nudge to use a range
+
+# Tool output &gt; ~8k tokens
+#   → nudge to narrow
+
+# Cache hit rate low in /cost
+#   → tip on what's busting it</code></pre>
       </div>
     </div>
-    <p class="note">Pricing is hardcoded for Claude 4.x (Opus / Sonnet / Haiku). Update <code>scripts/holocron-usage.js</code> when rates change.</p>
+    <p class="note">Pricing hardcoded for Claude 4.x (Opus / Sonnet / Haiku). Update <code>scripts/holocron-usage.js</code> when rates change.</p>
   </article>
 
   <!-- 09 -->

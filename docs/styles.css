@@ -662,6 +662,8 @@ blockquote {
   background: var(--bg-panel-2);
   border: 1px solid var(--line-strong);
   padding: 16px;
+  min-width: 0;   /* allow grid child to shrink below intrinsic content width */
+  overflow: hidden;
 }
 .role-label {
   font-family: var(--font-display);
@@ -677,6 +679,9 @@ blockquote {
   padding: 0;
   background: transparent;
   border: none;
+  max-width: 100%;
+  overflow-x: auto;   /* long lines scroll inside the card, not past it */
+  -webkit-overflow-scrolling: touch;
 }
 .role pre code {
   font-family: var(--font-mono);
@@ -684,6 +689,8 @@ blockquote {
   color: var(--ink);
   white-space: pre;
   line-height: 1.7;
+  display: inline-block;
+  min-width: 0;
 }
 
 /* Install block (09) */
